@@ -61,7 +61,7 @@ public class GuiAchievement extends Gui
 
     public void updateAchievementWindow()
     {
-        if(Minecraft.field_28005_H > 0L)
+        if(Minecraft.hasPaidCheckTime > 0L)
         {
             GL11.glDisable(2929 /*GL_DEPTH_TEST*/);
             GL11.glDepthMask(false);

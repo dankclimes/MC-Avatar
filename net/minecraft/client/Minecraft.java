@@ -1669,7 +1669,7 @@ public abstract class Minecraft
     public static long frameTimes[] = new long[512];
     public static long tickTimes[] = new long[512];
     public static int numRecordedFrameTimes = 0;
-    public static long field_28005_H = 0L;
+    public static long hasPaidCheckTime = 0L;
     public StatFileWriter statFileWriter;
     private String serverName;
     private int serverPort;

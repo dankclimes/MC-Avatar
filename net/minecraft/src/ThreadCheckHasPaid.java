@@ -28,7 +28,7 @@ public class ThreadCheckHasPaid extends Thread
             httpurlconnection.connect();
             if(httpurlconnection.getResponseCode() == 400)
             {
-                Minecraft.field_28005_H = System.currentTimeMillis();
+                Minecraft.hasPaidCheckTime = System.currentTimeMillis();
             }
             httpurlconnection.disconnect();
         }

@@ -15,9 +15,9 @@ public class RecipesWeapons
     {
         recipeItems = (new Object[][] {
             new Object[] {
-                Block.planks, Block.cobblestone, Item.ingotIron, Item.diamond, Item.ingotGold
+                Block.planks, Block.cobblestone, Item.ingotIron, Item.diamond, Item.ingotGold, Block.radiantDirt
             }, new Object[] {
-                Item.swordWood, Item.swordStone, Item.swordSteel, Item.swordDiamond, Item.swordGold
+                Item.swordWood, Item.swordStone, Item.swordSteel, Item.swordDiamond, Item.swordGold, Item.swordFire
             }
         });
     }

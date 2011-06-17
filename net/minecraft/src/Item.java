@@ -320,6 +320,9 @@ public class Item
     public static ItemMap mapItem = (ItemMap)(new ItemMap(102)).setIconCoord(12, 3).setItemName("map");
     public static Item record13 = (new ItemRecord(2000, "13")).setIconCoord(0, 15).setItemName("record");
     public static Item recordCat = (new ItemRecord(2001, "cat")).setIconCoord(1, 15).setItemName("record");
+
+    public static Item swordFire;
+
     public final int shiftedIndex;
     protected int maxStackSize;
     private int maxDamage;
@@ -366,6 +369,9 @@ public class Item
         reed = (new ItemReed(82, Block.reed)).setIconCoord(11, 1).setItemName("reeds");
         cake = (new ItemReed(98, Block.cake)).setMaxStackSize(1).setIconCoord(13, 1).setItemName("cake");
         redstoneRepeater = (new ItemReed(100, Block.redstoneRepeaterIdle)).setIconCoord(6, 5).setItemName("diode");
+
+        swordFire = (new ItemSwordFire(110, EnumToolMaterial.EMERALD)).setIconCoord(6, 8).setItemName("swordFire");
+
         StatList.func_25151_b();
     }
 }

@@ -178,7 +178,7 @@ public class GuiIngame extends Gui
         if(mc.gameSettings.showDebugInfo)
         {
             GL11.glPushMatrix();
-            if(Minecraft.field_28005_H > 0L)
+            if(Minecraft.hasPaidCheckTime > 0L)
             {
                 GL11.glTranslatef(0.0F, 32F, 0.0F);
             }
