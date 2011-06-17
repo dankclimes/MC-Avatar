@@ -37,6 +37,9 @@ public class BiomeGenBase
         spawnableCreatureList.add(new SpawnListEntry(net.minecraft.src.EntityPig.class, 10));
         spawnableCreatureList.add(new SpawnListEntry(net.minecraft.src.EntityChicken.class, 10));
         spawnableCreatureList.add(new SpawnListEntry(net.minecraft.src.EntityCow.class, 8));
+
+        spawnableCreatureList.add(new SpawnListEntry(EntityExample.class, 10));
+
         spawnableWaterCreatureList.add(new SpawnListEntry(net.minecraft.src.EntitySquid.class, 10));
     }
 

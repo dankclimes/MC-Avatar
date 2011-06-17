@@ -62,6 +62,9 @@ public class RenderManager
         entityRenderMap.put(net.minecraft.src.EntityBoat.class, new RenderBoat());
         entityRenderMap.put(net.minecraft.src.EntityFish.class, new RenderFish());
         entityRenderMap.put(net.minecraft.src.EntityLightningBolt.class, new RenderLightningBolt());
+
+        entityRenderMap.put(net.minecraft.src.EntityExample.class,new RenderExample(new ModelExample(),0.7F));
+
         Render render;
         for(Iterator iterator = entityRenderMap.values().iterator(); iterator.hasNext(); render.setRenderManager(this))
         {
