@@ -197,6 +197,11 @@ public class CraftingManager
         addRecipe(new ItemStack(Item.bed, 1), new Object[] {
             "###", "XXX", Character.valueOf('#'), Block.cloth, Character.valueOf('X'), Block.planks
         });
+
+        addRecipe(new ItemStack(Block.radiantDirt, 9), new Object[] {
+            " # ", "# #"," # ", Character.valueOf('#'), Block.dirt,
+        });
+
         Collections.sort(recipes, new RecipeSorter(this));
         System.out.println((new StringBuilder()).append(recipes.size()).append(" recipes").toString());
     }

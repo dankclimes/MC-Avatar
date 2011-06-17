@@ -691,6 +691,9 @@ public class Block
     public static final Block redstoneRepeaterActive;
     public static final Block lockedChest;
     public static final Block trapdoor;
+
+    public static final Block radiantDirt;
+
     public int blockIndexInTexture;
     public final int blockID;
     protected float blockHardness;
@@ -814,6 +817,9 @@ public class Block
         redstoneRepeaterActive = (new BlockRedstoneRepeater(94, true)).setHardness(0.0F).setLightValue(0.625F).setStepSound(soundWoodFootstep).setBlockName("diode").disableStats().func_28031_n();
         lockedChest = (new BlockLockedChest(95)).setHardness(0.0F).setLightValue(1.0F).setStepSound(soundWoodFootstep).setBlockName("lockedchest").setTickOnLoad(true).func_28031_n();
         trapdoor = (new BlockTrapDoor(96, Material.wood)).setHardness(3F).setStepSound(soundWoodFootstep).setBlockName("trapdoor").disableStats().func_28031_n();
+
+        radiantDirt = (new BlockRadiantDirt(100, 30)).setHardness(0.5F).setLightValue(0.9F).setStepSound(soundPowderFootstep).setBlockName("dirtRadiant");
+
         Item.itemsList[cloth.blockID] = (new ItemCloth(cloth.blockID - 256)).setItemName("cloth");
         Item.itemsList[wood.blockID] = (new ItemLog(wood.blockID - 256)).setItemName("log");
         Item.itemsList[stairSingle.blockID] = (new ItemSlab(stairSingle.blockID - 256)).setItemName("stoneSlab");
