@@ -136,6 +136,125 @@ public class ItemRenderer
         GL11.glPopMatrix();
     }
 
+    private void addItemEffects(ItemStack itemStack, float x, float y, float z, float rot){
+        if(itemStack.getItem().equals(Item.swordFire)){
+            addFireEffect(x,y,z, rot);
+        }
+    }
+
+    class Coords {
+        public float x;
+        public float y;
+        public float z;
+    }
+
+    protected Coords getRotationOffset(float x, float y, float z, float xoff, float zoff){
+        Coords coords = new Coords();
+
+        float zofffinal;
+        float xofffinal;
+
+        float yoff = 0.07f;//vertical
+
+
+        yoff = zoff * -MathHelper.sin((mc.thePlayer.rotationPitch/180) * 3.141593F);//*MathHelper.sin((rotationPitch/180) * 3.141593F);
+
+        coords.y = yoff + y;
+
+        float hyp = MathHelper.sqrt_float(xoff*xoff + zoff*zoff - yoff*yoff);
+
+        float hyp1 = MathHelper.sqrt_double(zoff*zoff - yoff*yoff);
+
+        float angle = (mc.thePlayer.rotationYaw/180)*3.141593F - MathHelper.acos(hyp1/hyp);
+
+        xofffinal = MathHelper.sin(angle) * -hyp;
+        if( xoff > 0){
+            coords.x =  x + xofffinal;
+        }else{
+            coords.x = x - xofffinal;
+        }
+
+        zofffinal = MathHelper.cos(angle) * hyp;
+        if(zoff > 0){
+            coords.z = z + zofffinal;// + (float)motionZ;
+        }else{
+            coords.z = z - zofffinal;// + (float)motionZ;
+        }
+        return coords;
+    }
+
+    private Coords addViewBob(float x, float y, float z, float f){
+        EntityPlayer entityplayer = (EntityPlayer)mc.renderViewEntity;
+
+        float playerrotRads = f;
+
+        float deltaDistWalked = entityplayer.distanceWalkedModified - entityplayer.prevDistanceWalkedModified;// is 0 at full velocity?
+        float deltaRotWalked = -(entityplayer.distanceWalkedModified + deltaDistWalked * playerrotRads);//
+
+        float deltaYaw = entityplayer.cameraYaw + (entityplayer.nextCameraYaw - entityplayer.cameraYaw) * playerrotRads;
+        float deltapitch = entityplayer.cameraPitch + (entityplayer.nextCameraPitch - entityplayer.cameraPitch) * playerrotRads;
+
+        //translate
+        //GL11.glTranslatef(MathHelper.sin(deltaRotWalked * 3.141593F) * deltaYaw * 0.5F, -Math.abs(MathHelper.cos(deltaRotWalked * 3.141593F) * deltaYaw), 0.0F);
+        float bobxtrans = MathHelper.sin(deltaRotWalked * 3.141593F) * deltaYaw * 0.5F;
+        float bobytrans = -Math.abs(MathHelper.cos(deltaRotWalked * 3.141593F) * deltaYaw);
+
+        x -= bobxtrans;
+        y -= bobytrans;
+
+        float x0 = x;
+        float y0 = y;
+        float z0 = z;
+
+        float rotDeg;
+        float rotRad;
+
+        //xz rots
+        //rot1 z axis
+        //GL11.glRotatef(MathHelper.sin(deltaRotWalked * 3.141593F) * deltaYaw * 3F, 0.0F, 0.0F, 1.0F);
+        rotDeg = MathHelper.sin(deltaRotWalked * 3.141593F) * deltaYaw * 3F;
+        rotRad = (rotDeg /180) * 3.14593F;
+
+        x = x0 * MathHelper.cos(rotRad) - y0 * MathHelper.sin(rotRad);
+        y = x0 * MathHelper.sin(rotRad) + y0 * MathHelper.cos(rotRad);
+
+        //rot2 x axis
+        //GL11.glRotatef(Math.abs(MathHelper.cos(deltaRotWalked * 3.141593F - 0.2F) * deltaYaw) * 5F, 1.0F, 0.0F, 0.0F);
+
+        rotDeg = Math.abs(MathHelper.cos(deltaRotWalked * 3.141593F - 0.2F) * deltaYaw) * 5F;
+        rotRad = (rotDeg /180) * 3.14593F;
+
+        z = y0 * MathHelper.sin(rotRad) + z0 * MathHelper.cos(rotRad);
+        y = y0 * MathHelper.cos(rotRad) - z0 * MathHelper.sin(rotRad);
+
+        //y rot x axis
+        //GL11.glRotatef(deltapitch, 1.0F, 0.0F, 0.0F);
+
+        rotDeg = deltapitch;
+        rotRad = (rotDeg /180) * 3.14593F;
+
+        z = y0 * MathHelper.sin(rotRad) + z0 * MathHelper.cos(rotRad);
+        y = y0 * MathHelper.cos(rotRad) - z0 * MathHelper.sin(rotRad);
+
+        Coords coords = new Coords();
+
+        coords.x = x;
+        coords.y = y;
+        coords.z = z;
+
+        return  coords;
+    }
+
+    private void addFireEffect(float x, float y, float z,float rot){
+
+        float xoff = -0.04f;
+        float zoff = -0.04F;
+
+        Coords coords = getRotationOffset(x,y,z,xoff,zoff);
+        coords = addViewBob(coords.x, coords.y, coords.z, rot);
+        mc.theWorld.spawnParticle("smallFlame", coords.x, coords.y, coords.z, 0.0D, 0.0D, 0.0D);
+    }
+
     public void renderItemInFirstPerson(float f)
     {
         float f1 = prevEquippedProgress + (equippedProgress - prevEquippedProgress) * f;
@@ -241,6 +360,68 @@ public class ItemRenderer
             }
             renderItem(entityplayersp, itemstack);
             GL11.glPopMatrix();
+
+
+            //********** my stuff *****************//
+            EntityPlayerSP player = mc.thePlayer;
+            /*
+            float playerrotRads = f;
+            EntityPlayer entityplayer = (EntityPlayer)mc.renderViewEntity;
+
+            float deltaDistWalked = entityplayer.distanceWalkedModified - entityplayer.prevDistanceWalkedModified;// is 0 at full velocity?
+            float deltaRotWalked = -(entityplayer.distanceWalkedModified + deltaDistWalked * playerrotRads);//
+
+            float deltaYaw = entityplayer.cameraYaw + (entityplayer.nextCameraYaw - entityplayer.cameraYaw) * playerrotRads;
+            // float deltapitch = entityplayer.cameraPitch + (entityplayer.nextCameraPitch - entityplayer.cameraPitch) * playerrotRads;
+
+            float bobxoff;
+            float bobyoff;
+
+            //***************************  need to figure out these const
+            float bobxconst = -0.025F;
+
+            //.65 works in water
+            float bobyconst = 0.09F;
+
+
+            bobyoff = MathHelper.abs(MathHelper.cos(deltaRotWalked * 3.141593F)) * bobyconst;
+
+
+            if(MathHelper.sin(deltaRotWalked* 3.141593F) > 0){
+                bobxoff = Math.abs(MathHelper.cos(deltaRotWalked* 3.141593F)) * bobxconst;
+            }else{
+                bobxoff = bobxconst - MathHelper.sin(deltaRotWalked* 3.141593F) * bobxconst;
+            }
+
+            if(deltaDistWalked == 0){
+                bobxoff = 0;
+                bobyoff = 0;
+            }
+             */
+            //**************************************************************
+
+            float posx = (float)player.posX;// + (float)player.motionX/2;//- (float) player.motionX * MathHelper.sin((player.prevRotationYaw/180) * 3.141593F);
+            float posy = (float)player.posY;
+            float posz = (float)player.posZ;// + (float)player.motionZ/2;// + (float)player.motionZ * MathHelper.cos((player.prevRotationYaw/180) * 3.141593F);
+
+            //player.worldObj.spawnParticle("smallFlame",player.posX,player.posY,player.posZ,0.0D,0D,0D);
+            //addItemEffects(itemstack,posx,posy,posz,f);
+
+            //**** Need to figure this out
+            //float fullv = .07777777777F;
+
+            //float scalev = deltaDistWalked/fullv;
+
+            //posx += bobxoff;// * scalev;
+            //posy += bobyoff;
+            //posz += bobxoff;// * scalev;
+
+
+            //posx = bobx;
+            //posy = boby;
+            //posz = bobz;
+
+            addItemEffects(itemstack,posx,posy,posz,f);
         } else
         {
             GL11.glPushMatrix();

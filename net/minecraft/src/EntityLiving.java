@@ -5,7 +5,6 @@
 package net.minecraft.src;
 
 import java.util.List;
-import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
 //            Entity, Vec3D, StepSound, AxisAlignedBB, 
@@ -133,7 +132,7 @@ public abstract class EntityLiving extends Entity
         {
             air = maxAir;
         }
-        cameraPitch = field_9328_R;
+        cameraPitch = nextCameraPitch;
         if(attackTime > 0)
         {
             attackTime--;
@@ -946,7 +945,7 @@ public abstract class EntityLiving extends Entity
     public int deathTime;
     public int attackTime;
     public float cameraPitch;
-    public float field_9328_R;
+    public float nextCameraPitch;
     protected boolean unused_flag;
     public int field_9326_T;
     public float field_9325_U;

@@ -205,8 +205,8 @@ public class EntityRenderer
             EntityPlayer entityplayer = (EntityPlayer)mc.renderViewEntity;
             float f1 = entityplayer.distanceWalkedModified - entityplayer.prevDistanceWalkedModified;
             float f2 = -(entityplayer.distanceWalkedModified + f1 * f);
-            float f3 = entityplayer.field_775_e + (entityplayer.field_774_f - entityplayer.field_775_e) * f;
-            float f4 = entityplayer.cameraPitch + (entityplayer.field_9328_R - entityplayer.cameraPitch) * f;
+            float f3 = entityplayer.cameraYaw + (entityplayer.nextCameraYaw - entityplayer.cameraYaw) * f;
+            float f4 = entityplayer.cameraPitch + (entityplayer.nextCameraPitch - entityplayer.cameraPitch) * f;
             GL11.glTranslatef(MathHelper.sin(f2 * 3.141593F) * f3 * 0.5F, -Math.abs(MathHelper.cos(f2 * 3.141593F) * f3), 0.0F);
             GL11.glRotatef(MathHelper.sin(f2 * 3.141593F) * f3 * 3F, 0.0F, 0.0F, 1.0F);
             GL11.glRotatef(Math.abs(MathHelper.cos(f2 * 3.141593F - 0.2F) * f3) * 5F, 1.0F, 0.0F, 0.0F);
@@ -341,7 +341,7 @@ public class EntityRenderer
         orientCamera(f);
     }
 
-    private void func_4135_b(float f, int i)
+    private void renderFirstPerson(float f, int i)
     {
         GL11.glLoadIdentity();
         if(mc.gameSettings.anaglyph)
@@ -634,7 +634,7 @@ public class EntityRenderer
             if(cameraZoom == 1.0D)
             {
                 GL11.glClear(256);
-                func_4135_b(f, i);
+                renderFirstPerson(f, i);
             }
             if(!mc.gameSettings.anaglyph)
             {

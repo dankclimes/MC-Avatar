@@ -17,9 +17,21 @@ public class MathHelper
         return SIN_TABLE[(int)(f * 10430.38F) & 0xffff];
     }
 
+    public static final float asin(float f){
+        return (float) Math.asin(f);
+    }
+
     public static final float cos(float f)
     {
         return SIN_TABLE[(int)(f * 10430.38F + 16384F) & 0xffff];
+    }
+
+    public static final float acos(float f){
+        return (float) Math.acos(f);
+    }
+
+    public static final float tan(float f){
+        return sin(f)/cos(f);
     }
 
     public static final float sqrt_float(float f)

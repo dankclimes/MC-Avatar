@@ -81,6 +81,9 @@ public abstract class EntityPlayer extends EntityLiving
             }
         }
         super.onUpdate();
+
+
+
         if(!worldObj.multiplayerWorld && craftingInventory != null && !craftingInventory.isUsableByPlayer(this))
         {
             func_20059_m();
@@ -125,6 +128,10 @@ public abstract class EntityPlayer extends EntityLiving
         {
             startMinecartRidingCoordinate = null;
         }
+
+        if(getCurrentEquippedItem() != null){
+            addItemEffects(this.getCurrentEquippedItem(),(float)posX,(float)posY,(float)posZ);
+        }
     }
 
     protected boolean isMovementBlocked()
@@ -149,8 +156,8 @@ public abstract class EntityPlayer extends EntityLiving
         double d1 = posY;
         double d2 = posZ;
         super.updateRidden();
-        field_775_e = field_774_f;
-        field_774_f = 0.0F;
+        cameraYaw = nextCameraYaw;
+        nextCameraYaw = 0.0F;
         addMountedMovementStat(posX - d, posY - d1, posZ - d2);
     }
 
@@ -187,24 +194,24 @@ public abstract class EntityPlayer extends EntityLiving
             heal(1);
         }
         inventory.decrementAnimations();
-        field_775_e = field_774_f;
+        cameraYaw = nextCameraYaw;
         super.onLivingUpdate();
-        float f = MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ);
+        float horizontalMagnitude = MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ);
         float f1 = (float)Math.atan(-motionY * 0.20000000298023224D) * 15F;
-        if(f > 0.1F)
+        if(horizontalMagnitude > 0.1F)
         {
-            f = 0.1F;
+            horizontalMagnitude = 0.1F;
         }
         if(!onGround || health <= 0)
         {
-            f = 0.0F;
+            horizontalMagnitude = 0.0F;
         }
         if(onGround || health <= 0)
         {
             f1 = 0.0F;
         }
-        field_774_f += (f - field_774_f) * 0.4F;
-        field_9328_R += (f1 - field_9328_R) * 0.8F;
+        nextCameraYaw += (horizontalMagnitude - nextCameraYaw) * 0.4F;
+        nextCameraPitch += (f1 - nextCameraPitch) * 0.8F;
         if(health > 0)
         {
             List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(1.0D, 0.0D, 1.0D));
@@ -567,6 +574,81 @@ public abstract class EntityPlayer extends EntityLiving
         }
     }
 
+    private void addItemEffects(ItemStack itemStack, float x, float y, float z){
+        if(itemStack.getItem().equals(Item.swordFire)){
+            //addFireEffect(x,y,z);
+        }
+    }
+
+    public int getQuad(){
+        int quad;
+        if(MathHelper.sin((rotationYaw/180) * 3.141593F) > 0){
+            if(MathHelper.cos((rotationYaw/180) * 3.141593F) > 0){
+                quad = 1;
+            }else{
+                quad = 2;
+            }
+        }else{
+            if(MathHelper.cos((rotationYaw/180) * 3.141593F) > 0){
+                quad = 4;
+            }else{
+                quad = 3;
+            }
+        }
+        return quad;
+    }
+
+    class Coords {
+        public float x;
+        public float y;
+        public float z;
+    }
+
+    protected Coords getRotationOffset(float x, float y, float z, float xoff, float zoff){
+        Coords coords = new Coords();
+
+        float zofffinal;
+        float xofffinal;
+
+        float yoff = 0.07f;//vertical
+
+
+        yoff = zoff * -MathHelper.sin((rotationPitch/180) * 3.141593F);//*MathHelper.sin((rotationPitch/180) * 3.141593F);
+
+        coords.y = yoff + y;
+
+        float hyp = MathHelper.sqrt_float(xoff*xoff + zoff*zoff - yoff*yoff);
+
+        float hyp1 = MathHelper.sqrt_double(zoff*zoff - yoff*yoff);
+
+        float angle = (rotationYaw/180)*3.141593F - MathHelper.acos(hyp1/hyp);
+
+        xofffinal = MathHelper.sin(angle) * -hyp;
+        if( xoff > 0){
+            coords.x =  x + xofffinal;
+        }else{
+            coords.x = x - xofffinal;
+        }
+
+        zofffinal = MathHelper.cos(angle) * hyp;
+        if(zoff > 0){
+            coords.z = z + zofffinal;// + (float)motionZ;
+        }else{
+            coords.z = z - zofffinal;// + (float)motionZ;
+        }
+        return coords;
+    }
+
+    private void addFireEffect(float x, float y, float z){
+
+        float xoff = -0.04f;
+        float zoff = -0.04F;
+
+        Coords coords = getRotationOffset(x,y,z,xoff,zoff);
+
+        worldObj.spawnParticle("smallFlame",coords.x,coords.y,coords.z, 0.0D, 0.0D, 0.0D);
+    }
+
     public void respawnPlayer()
     {
     }
@@ -817,6 +899,9 @@ public abstract class EntityPlayer extends EntityLiving
         double d2 = posZ;
         super.moveEntityWithHeading(f, f1);
         addMovementStat(posX - d, posY - d1, posZ - d2);
+        if(getCurrentEquippedItem() != null){
+            //addItemEffects(getCurrentEquippedItem(), (float)d, (float)d1, (float)d2);
+        }
     }
 
     private void addMovementStat(double d, double d1, double d2)
@@ -941,8 +1026,8 @@ public abstract class EntityPlayer extends EntityLiving
     public Container craftingInventory;
     public byte field_9371_f;
     public int score;
-    public float field_775_e;
-    public float field_774_f;
+    public float cameraYaw;
+    public float nextCameraYaw;
     public boolean isSwinging;
     public int swingProgressInt;
     public String username;

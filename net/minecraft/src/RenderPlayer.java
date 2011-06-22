@@ -184,7 +184,7 @@ public class RenderPlayer extends RenderLiving
             {
                 f10 = 0.0F;
             }
-            float f12 = entityplayer.field_775_e + (entityplayer.field_774_f - entityplayer.field_775_e) * f;
+            float f12 = entityplayer.cameraYaw + (entityplayer.nextCameraYaw - entityplayer.cameraYaw) * f;
             f9 += MathHelper.sin((entityplayer.prevDistanceWalkedModified + (entityplayer.distanceWalkedModified - entityplayer.prevDistanceWalkedModified) * f) * 6F) * 32F * f12;
             if(entityplayer.isSneaking())
             {

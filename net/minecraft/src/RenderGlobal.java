@@ -1432,6 +1432,10 @@ public class RenderGlobal
         {
             mc.effectRenderer.addEffect(new EntityHeartFX(worldObj, d, d1, d2, d3, d4, d5));
         }
+        if(s.equals("smallFlame"))
+        {
+            mc.effectRenderer.addEffect(new EntitySmallFlameFX(worldObj, d, d1, d2, d3, d4, d5));
+        }
     }
 
     public void obtainEntitySkin(Entity entity)

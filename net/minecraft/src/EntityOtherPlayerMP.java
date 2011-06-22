@@ -87,7 +87,7 @@ public class EntityOtherPlayerMP extends EntityPlayer
             setPosition(d, d1, d2);
             setRotation(rotationYaw, rotationPitch);
         }
-        field_775_e = field_774_f;
+        cameraYaw = nextCameraYaw;
         float f = MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ);
         float f1 = (float)Math.atan(-motionY * 0.20000000298023224D) * 15F;
         if(f > 0.1F)
@@ -102,8 +102,8 @@ public class EntityOtherPlayerMP extends EntityPlayer
         {
             f1 = 0.0F;
         }
-        field_774_f += (f - field_774_f) * 0.4F;
-        field_9328_R += (f1 - field_9328_R) * 0.8F;
+        nextCameraYaw += (f - nextCameraYaw) * 0.4F;
+        nextCameraPitch += (f1 - nextCameraPitch) * 0.8F;
     }
 
     public void outfitWithItem(int i, int j, int k)
