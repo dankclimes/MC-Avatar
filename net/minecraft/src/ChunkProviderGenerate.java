@@ -4,6 +4,7 @@
 
 package net.minecraft.src;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
@@ -45,7 +46,7 @@ public class ChunkProviderGenerate
         int k = byte0 + 1;
         byte byte2 = 17;
         int l = byte0 + 1;
-        field_4180_q = func_4061_a(field_4180_q, i * byte0, 0, j * byte0, k, byte2, l);
+        field_4180_q = getBlocks(field_4180_q, i * byte0, 0, j * byte0, k, byte2, l);
         for(int i1 = 0; i1 < byte0; i1++)
         {
             for(int j1 = 0; j1 < byte0; j1++)
@@ -232,7 +233,7 @@ public class ChunkProviderGenerate
         return chunk;
     }
 
-    private double[] func_4061_a(double ad[], int i, int j, int k, int l, int i1, int j1)
+    private double[] getBlocks(double ad[], int i, int j, int k, int l, int i1, int j1)
     {
         if(ad == null)
         {
@@ -452,6 +453,8 @@ public class ChunkProviderGenerate
             (new WorldGenMinable(Block.oreLapis.blockID, 6)).generate(worldObj, rand, k7, l10, k13);
         }
 
+                genTowns(k, l);
+
         d = 0.5D;
         int k4 = (int)((mobSpawnerNoise.func_806_a((double)k * d, (double)l * d) / 8D + rand.nextDouble() * 4D + 4D) / 3D);
         int l7 = 0;
@@ -633,6 +636,10 @@ public class ChunkProviderGenerate
             (new WorldGenLiquids(Block.lavaMoving.blockID)).generate(worldObj, rand, i22, l23, i25);
         }
 
+
+
+
+        //Environment effects based on temp, currently only snow
         generatedTemperatures = worldObj.getWorldChunkManager().getTemperatures(generatedTemperatures, k + 8, l + 8, 16, 16);
         for(int j19 = k + 8; j19 < k + 8 + 16; j19++)
         {
@@ -696,4 +703,43 @@ public class ChunkProviderGenerate
     double field_4181_h[];
     int field_914_i[][];
     private double generatedTemperatures[];
+
+    public double getDistance(TownLocation t0, TownLocation t1){
+        return MathHelper.sqrt_double((t0.x-t1.x)*(t0.x-t1.x) + (t0.z - t1.z)*(t0.z - t1.z));
+    }
+
+    class TownLocation {
+        public int x;
+        public int y;
+        public int z;
+    }
+
+    private ArrayList<TownLocation> townLocations = new ArrayList<TownLocation>();
+
+    private static final int TOWN_DISTANCE = 300;//300 should be about the smallest
+
+    private void genTowns(int k, int l){
+        boolean genTown = true;
+
+        TownLocation newTownLoc = new TownLocation();
+
+        newTownLoc.x = k + rand.nextInt(16);
+        newTownLoc.y = rand.nextInt(112) + 16;
+        newTownLoc.z =  l + rand.nextInt(16);
+
+        for(int i = 0; i < townLocations.size();i++){
+            TownLocation tl = townLocations.get(i);
+            //if(getDistance(newTownLoc,tl) < TOWN_DISTANCE){
+            if((newTownLoc.x - tl.x) + (newTownLoc.z - tl.z) < TOWN_DISTANCE){
+                genTown = false;
+                break;
+            }
+        }
+
+
+        if(genTown){
+            townLocations.add(newTownLoc);
+            (new WorldGenTown()).generate(worldObj, rand, newTownLoc.x, newTownLoc.y,newTownLoc.z);
+        }
+    }
 }
